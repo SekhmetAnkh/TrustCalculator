@@ -77,18 +77,24 @@ function calculateDungeons() {
     let level = currentLevel;
     let exp = currentExp;
     let result = '';
+    let dungeonsSummary = {};
     let dungeonsNeeded = 0;
 
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
         const dungeonsForThisLevel = Math.ceil(expNeeded / expPerDungeon[level]);
-        dungeonsNeeded += dungeonsForThisLevel;
-        result += `Level ${level}: Run ${dungeonNames[level]} ${dungeonsForThisLevel} times<br>`;
+        dungeonsSummary[dungeonNames[level]] = dungeonsSummary[dungeonNames[level]] || 0;
+        dungeonsSummary[dungeonNames[level]] += dungeonsForThisLevel;
+        dungeonsNeeded += dungeonsForThisLevel * expPerDungeon[level];
         level += 1;
-        exp = 0;
+        exp = 0; // Reset exp after reaching next level
     }
 
-    result += `<br>Total dungeons needed: ${dungeonsNeeded}`;
-    document.getElementById('result').innerHTML = result;
+    result += 'To reach your target level, you should run the following dungeons:\n\n';
+    for (const dungeon in dungeonsSummary) {
+        result += `${dungeon}: ${dungeonsSummary[dungeon]} times\n`;
+    }
+    result += `\nTotal dungeons needed: ${Math.ceil(dungeonsNeeded / expPerDungeon[currentLevel])}`;
+    document.getElementById('result').innerText = result;
 }
