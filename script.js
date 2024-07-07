@@ -74,10 +74,9 @@ function calculateDungeons() {
     const currentLevel = parseInt(document.getElementById('current-level').value);
     const currentExp = parseInt(document.getElementById('current-exp').value);
     const targetLevel = parseInt(document.getElementById('target-level').value);
-    const hasArmoryBuff = document.getElementById('armory-buff-checkbox').checked;
+    const armoryBuffMultiplier = parseFloat(document.getElementById('armory-buff').value);
     const hasRestedBonus = document.getElementById('rested-bonus-checkbox').checked;
     const hasExpFoodBuff = document.getElementById('exp-food-checkbox').checked;
-    const armoryBuffMultiplier = hasArmoryBuff ? 0.5 : 0;
     const restedBonusMultiplier = hasRestedBonus ? 0.5 : 0;
     const expFoodBuffMultiplier = hasExpFoodBuff ? 1.03 : 1;
     let level = currentLevel;
