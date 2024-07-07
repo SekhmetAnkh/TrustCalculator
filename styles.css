@@ -106,3 +106,8 @@ input[type="checkbox"]:checked + .checkbox-custom::after {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
+/* Add this CSS for toggle buttons */
+.toggle-button.active {
+    background-color: #27ae60; /* Green color when active */
+    color: white; /* White text when active */
+}
