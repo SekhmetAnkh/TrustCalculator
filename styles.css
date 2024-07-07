@@ -45,7 +45,7 @@ label {
 }
 
 /* Input styles */
-input[type="number"], input[type="checkbox"] {
+input[type="number"], input[type="checkbox"], select {
     width: calc(100% - 16px); /* Adjust width to compensate for padding */
     padding: 8px;
     border: none;
