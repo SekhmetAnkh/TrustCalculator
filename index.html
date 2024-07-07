@@ -22,10 +22,15 @@
             <input type="number" id="target-level" min="81" max="100" required>
         </div>
         <div class="form-group">
-            <label>
-                <input type="checkbox" id="exp-buff-checkbox">
-                3% EXP Buff from food
-            </label>
+            <label for="armory-buff">Armory Buff:</label>
+            <select id="armory-buff">
+                <option value="0.5">50% (e.g., rested)</option>
+                <option value="1.0">100% (e.g., squadron manual)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="exp-buff-checkbox">
+            <label for="exp-buff-checkbox">3% EXP Food Buff</label>
         </div>
         <button onclick="calculateDungeons()">Calculate</button>
         <div id="result"></div>
