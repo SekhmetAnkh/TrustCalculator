@@ -46,22 +46,49 @@ const expPerDungeon = {
     100: 22979000,
 };
 
+const dungeonNames = {
+    80: "Amaurot",
+    81: "The Tower of Zot",
+    82: "The Tower of Zot",
+    83: "The Tower of Babil",
+    84: "The Tower of Babil",
+    85: "Vanaspati",
+    86: "Vanaspati",
+    87: "Ktisis Hyperboreia",
+    88: "Ktisis Hyperboreia",
+    89: "The Aitiascope",
+    90: "The Aitiascope",
+    91: "Alzadaal's Legacy",
+    92: "Alzadaal's Legacy",
+    93: "The Fell Court of Troia",
+    94: "The Fell Court of Troia",
+    95: "Lapis Manalis",
+    96: "Lapis Manalis",
+    97: "The Aetherfont",
+    98: "The Aetherfont",
+    99: "The Lunar Subterrane",
+    100: "The Lunar Subterrane",
+};
+
 function calculateDungeons() {
     const currentLevel = parseInt(document.getElementById('current-level').value);
     const currentExp = parseInt(document.getElementById('current-exp').value);
     const targetLevel = parseInt(document.getElementById('target-level').value);
-    let dungeonsNeeded = 0;
     let level = currentLevel;
     let exp = currentExp;
+    let result = '';
+    let dungeonsNeeded = 0;
 
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
         const dungeonsForThisLevel = Math.ceil(expNeeded / expPerDungeon[level]);
         dungeonsNeeded += dungeonsForThisLevel;
+        result += `Level ${level}: Run ${dungeonNames[level]} ${dungeonsForThisLevel} times<br>`;
         level += 1;
         exp = 0;
     }
 
-    document.getElementById('result').innerText = `Number of dungeons needed: ${dungeonsNeeded}`;
+    result += `<br>Total dungeons needed: ${dungeonsNeeded}`;
+    document.getElementById('result').innerHTML = result;
 }
