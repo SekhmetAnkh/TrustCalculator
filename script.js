@@ -74,10 +74,12 @@ function calculateDungeons() {
     const currentLevel = parseInt(document.getElementById('current-level').value);
     const currentExp = parseInt(document.getElementById('current-exp').value);
     const targetLevel = parseInt(document.getElementById('target-level').value);
-    const armoryBuff = parseFloat(document.getElementById('armory-buff').value);
-    const hasExpBuff = document.getElementById('exp-buff-checkbox').checked;
-    const expBuffMultiplier = hasExpBuff ? 1.03 : 1; // 3% exp buff if checked
-    const totalBuffMultiplier = 1 + armoryBuff; // Total multiplier including Armory Buff
+    const hasArmoryBuff = document.getElementById('armory-buff-checkbox').checked;
+    const hasRestedBonus = document.getElementById('rested-bonus-checkbox').checked;
+    const hasExpFoodBuff = document.getElementById('exp-food-checkbox').checked;
+    const armoryBuffMultiplier = hasArmoryBuff ? 0.5 : 0;
+    const restedBonusMultiplier = hasRestedBonus ? 0.5 : 0;
+    const expFoodBuffMultiplier = hasExpFoodBuff ? 1.03 : 1;
     let level = currentLevel;
     let exp = currentExp;
     let result = '';
@@ -87,7 +89,7 @@ function calculateDungeons() {
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
-        const effectiveExpPerDungeon = expPerDungeon[level] * expBuffMultiplier * totalBuffMultiplier;
+        const effectiveExpPerDungeon = expPerDungeon[level] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier);
         const dungeonsForThisLevel = Math.ceil(expNeeded / effectiveExpPerDungeon);
         dungeonsSummary[dungeonNames[level]] = dungeonsSummary[dungeonNames[level]] || 0;
         dungeonsSummary[dungeonNames[level]] += dungeonsForThisLevel;
@@ -100,6 +102,6 @@ function calculateDungeons() {
     for (const dungeon in dungeonsSummary) {
         result += `${dungeon}: ${dungeonsSummary[dungeon]} times\n`;
     }
-    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expBuffMultiplier * totalBuffMultiplier))}`;
+    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier)))}`;
     document.getElementById('result').innerText = result;
 }
