@@ -74,19 +74,22 @@ function calculateDungeons() {
     const currentLevel = parseInt(document.getElementById('current-level').value);
     const currentExp = parseInt(document.getElementById('current-exp').value);
     const targetLevel = parseInt(document.getElementById('target-level').value);
+    const hasExpBuff = document.getElementById('exp-buff-checkbox').checked;
+    const expBuffMultiplier = hasExpBuff ? 1.03 : 1; // 3% exp buff if checked
     let level = currentLevel;
     let exp = currentExp;
     let result = '';
     let dungeonsSummary = {};
-    let dungeonsNeeded = 0;
+    let totalExpNeeded = 0;
 
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
-        const dungeonsForThisLevel = Math.ceil(expNeeded / expPerDungeon[level]);
+        const effectiveExpPerDungeon = expPerDungeon[level] * expBuffMultiplier;
+        const dungeonsForThisLevel = Math.ceil(expNeeded / effectiveExpPerDungeon);
         dungeonsSummary[dungeonNames[level]] = dungeonsSummary[dungeonNames[level]] || 0;
         dungeonsSummary[dungeonNames[level]] += dungeonsForThisLevel;
-        dungeonsNeeded += dungeonsForThisLevel * expPerDungeon[level];
+        totalExpNeeded += dungeonsForThisLevel * effectiveExpPerDungeon;
         level += 1;
         exp = 0; // Reset exp after reaching next level
     }
@@ -95,6 +98,6 @@ function calculateDungeons() {
     for (const dungeon in dungeonsSummary) {
         result += `${dungeon}: ${dungeonsSummary[dungeon]} times\n`;
     }
-    result += `\nTotal dungeons needed: ${Math.ceil(dungeonsNeeded / expPerDungeon[currentLevel])}`;
+    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expBuffMultiplier))}`;
     document.getElementById('result').innerText = result;
 }
