@@ -70,17 +70,48 @@ const dungeonNames = {
     100: "The Lunar Subterrane",
 };
 
+let armoryBuffMultiplier = 0;
+let hasRestedBonus = false;
+let hasExpFoodBuff = false;
+let hasAzeymasEarrings = false;
+
+function toggleArmoryBuff(multiplier) {
+    armoryBuffMultiplier = multiplier;
+    updateToggleButtonState('armory-buff', multiplier);
+}
+
+function toggleRestedBonus() {
+    hasRestedBonus = !hasRestedBonus;
+    const label = hasRestedBonus ? 'On' : 'Off';
+    document.getElementById('rested-bonus').innerText = label;
+}
+
+function toggleExpFoodBuff() {
+    hasExpFoodBuff = !hasExpFoodBuff;
+    const label = hasExpFoodBuff ? 'On' : 'Off';
+    document.getElementById('exp-food').innerText = label;
+}
+
+function toggleAzeymasEarrings() {
+    hasAzeymasEarrings = !hasAzeymasEarrings;
+    const label = hasAzeymasEarrings ? 'On' : 'Off';
+    document.getElementById('azeymas-earrings').innerText = label;
+}
+
+function updateToggleButtonState(id, multiplier) {
+    const buttons = document.querySelectorAll(`#${id}-group .toggle-button`);
+    buttons.forEach(button => {
+        button.classList.remove('active');
+        if (parseFloat(button.dataset.multiplier) === multiplier) {
+            button.classList.add('active');
+        }
+    });
+}
+
 function calculateDungeons() {
     const currentLevel = parseInt(document.getElementById('current-level').value);
     const currentExp = parseInt(document.getElementById('current-exp').value);
     const targetLevel = parseInt(document.getElementById('target-level').value);
-    const armoryBuffMultiplier = parseFloat(document.getElementById('armory-buff').value);
-    const hasRestedBonus = document.getElementById('rested-bonus-checkbox').checked;
-    const hasExpFoodBuff = document.getElementById('exp-food-checkbox').checked;
-    const hasAzeymasEarrings = document.getElementById('azeymas-earrings-checkbox').checked;
-    const restedBonusMultiplier = hasRestedBonus ? 0.5 : 0;
-    const expFoodBuffMultiplier = hasExpFoodBuff ? 1.03 : 1;
-    const azeymasEarringsMultiplier = (currentLevel <= 90 && hasAzeymasEarrings) ? 0.3 : 0;
     let level = currentLevel;
     let exp = currentExp;
     let result = '';
@@ -90,7 +121,7 @@ function calculateDungeons() {
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
-        const effectiveExpPerDungeon = expPerDungeon[level] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier + azeymasEarringsMultiplier);
+        const effectiveExpPerDungeon = expPerDungeon[level] * (1 + armoryBuffMultiplier + (hasRestedBonus ? 0.5 : 0) + (hasExpFoodBuff ? 0.03 : 0) + (level <= 90 && hasAzeymasEarrings ? 0.3 : 0));
         const dungeonsForThisLevel = Math.ceil(expNeeded / effectiveExpPerDungeon);
         dungeonsSummary[dungeonNames[level]] = dungeonsSummary[dungeonNames[level]] || 0;
         dungeonsSummary[dungeonNames[level]] += dungeonsForThisLevel;
@@ -103,6 +134,6 @@ function calculateDungeons() {
     for (const dungeon in dungeonsSummary) {
         result += `${dungeon}: ${dungeonsSummary[dungeon]} times\n`;
     }
-    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier + azeymasEarringsMultiplier)))}`;
+    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * (1 + armoryBuffMultiplier + (hasRestedBonus ? 0.5 : 0) + (hasExpFoodBuff ? 0.03 : 0) + (currentLevel <= 90 && hasAzeymasEarrings ? 0.3 : 0))))}`;
     document.getElementById('result').innerText = result;
 }
