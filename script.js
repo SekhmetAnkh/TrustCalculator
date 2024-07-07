@@ -77,8 +77,10 @@ function calculateDungeons() {
     const armoryBuffMultiplier = parseFloat(document.getElementById('armory-buff').value);
     const hasRestedBonus = document.getElementById('rested-bonus-checkbox').checked;
     const hasExpFoodBuff = document.getElementById('exp-food-checkbox').checked;
+    const hasAzeymasEarrings = document.getElementById('azeymas-earrings-checkbox').checked;
     const restedBonusMultiplier = hasRestedBonus ? 0.5 : 0;
     const expFoodBuffMultiplier = hasExpFoodBuff ? 1.03 : 1;
+    const azeymasEarringsMultiplier = (currentLevel <= 90 && hasAzeymasEarrings) ? 0.3 : 0;
     let level = currentLevel;
     let exp = currentExp;
     let result = '';
@@ -88,7 +90,7 @@ function calculateDungeons() {
     while (level < targetLevel) {
         const expToNextLevel = expRequired[level];
         const expNeeded = expToNextLevel - exp;
-        const effectiveExpPerDungeon = expPerDungeon[level] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier);
+        const effectiveExpPerDungeon = expPerDungeon[level] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier + azeymasEarringsMultiplier);
         const dungeonsForThisLevel = Math.ceil(expNeeded / effectiveExpPerDungeon);
         dungeonsSummary[dungeonNames[level]] = dungeonsSummary[dungeonNames[level]] || 0;
         dungeonsSummary[dungeonNames[level]] += dungeonsForThisLevel;
@@ -101,6 +103,6 @@ function calculateDungeons() {
     for (const dungeon in dungeonsSummary) {
         result += `${dungeon}: ${dungeonsSummary[dungeon]} times\n`;
     }
-    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier)))}`;
+    result += `\nTotal dungeons needed: ${Math.ceil(totalExpNeeded / (expPerDungeon[currentLevel] * expFoodBuffMultiplier * (1 + armoryBuffMultiplier + restedBonusMultiplier + azeymasEarringsMultiplier)))}`;
     document.getElementById('result').innerText = result;
 }
